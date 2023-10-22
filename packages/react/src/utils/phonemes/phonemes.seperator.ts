@@ -10,7 +10,7 @@ import {
 import { phonemes } from "../../constraints/phonemes";
 import { P, match } from "ts-pattern";
 
-export const wordsSeperator = (words: string) => {
+export const phonemesSeperator = (words: string) => {
   return pipe(
     words,
     split(""),

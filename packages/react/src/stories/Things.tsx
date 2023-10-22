@@ -1,7 +1,7 @@
 import { pipe } from "@fxts/core";
-import { wordsSeperator } from "../utils/words/words.seperator";
+import { phonemesSeperator } from "../utils/phonemes/phonemes.seperator";
 
 export type ThingsProps = { name: string };
 export const Things = ({ name }: ThingsProps) => (
-  <div>hello {pipe(wordsSeperator(name), JSON.stringify)}</div>
+  <div>hello {pipe(phonemesSeperator(name), JSON.stringify)}</div>
 );

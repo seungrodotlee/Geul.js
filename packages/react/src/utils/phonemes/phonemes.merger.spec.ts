@@ -1,8 +1,8 @@
-import { wordsMerger } from "./words.merger";
-describe("wordsMerger", () => {
+import { phonemesMerger } from "./phonemes.merger";
+describe("phonemesMerger", () => {
   it("should merge korean phonemes to words", () => {
     expect(
-      wordsMerger([
+      phonemesMerger([
         "ㅇ",
         "ㅏ",
         "ㄴ",
@@ -20,14 +20,14 @@ describe("wordsMerger", () => {
   });
 
   it("should return inputed phonemes if it can't merged", () => {
-    expect(wordsMerger(["ㅇ", "ㅏ", "ㄴ", "ㄴ", "ㅕ", "ㅇ", "ㅎ"])).toBe(
+    expect(phonemesMerger(["ㅇ", "ㅏ", "ㄴ", "ㄴ", "ㅕ", "ㅇ", "ㅎ"])).toBe(
       "안녕ㅎ"
     );
   });
 
   it("should return inputed phonemes if it's not korean", () => {
     expect(
-      wordsMerger([
+      phonemesMerger([
         "ㅇ",
         "ㅏ",
         "ㄴ",
