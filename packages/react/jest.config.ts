@@ -1,11 +1,12 @@
 /* eslint-disable */
 export default {
-  displayName: 'react',
-  preset: '../../jest.preset.js',
+  displayName: "react",
+  preset: "../../jest.preset.js",
   transform: {
-    '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
-    '^.+\\.[tj]sx?$': ['babel-jest', { presets: ['@nx/react/babel'] }],
+    "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "@nx/react/plugins/jest",
+    "^.+\\.[tj]sx?$": ["babel-jest", { presets: ["@nx/react/babel"] }],
   },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/packages/react',
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
+  coverageDirectory: "../../coverage/packages/react",
+  setupFilesAfterEnv: ["./jest.setup.ts"],
 };
