@@ -27,20 +27,7 @@ describe("phonemesMerger", () => {
 
   it("should return inputed phonemes if it's not korean", () => {
     expect(
-      phonemesMerger([
-        "ㅇ",
-        "ㅏ",
-        "ㄴ",
-        "ㄴ",
-        "ㅕ",
-        "ㅇ",
-        " ",
-        "d",
-        "a",
-        "v",
-        "i",
-        "d",
-      ])
-    ).toBe("안녕 david");
+      phonemesMerger(["ㅎ", "ㅏ", "ㅇ", "ㅣ", " ", "d", "a", "v", "i", "d"])
+    ).toBe("하이 david");
   });
 });
