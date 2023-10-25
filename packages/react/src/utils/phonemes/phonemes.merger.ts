@@ -7,7 +7,6 @@ import {
   prop,
   range,
   reduce,
-  tap,
   toArray,
 } from "@fxts/core";
 import { P, match } from "ts-pattern";

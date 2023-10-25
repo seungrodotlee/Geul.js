@@ -1,8 +1,50 @@
-export type UseGeulOptions = {
-  speed: number;
-  useAutomata: boolean;
-}
-export const useGeul = (value: string, {speed, useAutomata}: UseGeulOptions) => {
-  const phonemes = 
-}
+import { phonemes } from "./../constraints/phonemes";
+import { useEffect, useMemo, useState } from "react";
+import { delay, interval, map, of, reduce, scan, take } from "rxjs";
+import { phonemesSeperator } from "../utils/phonemes/phonemes.seperator";
+import { phonemesMerger } from "../utils/phonemes/phonemes.merger";
+import { pipe, slice, toArray } from "@fxts/core";
+import { match } from "ts-pattern";
 
+type UseGeulOptions = {
+  speed: number;
+  initial?: string;
+};
+export const useGeul = (
+  value: string,
+  { speed, initial = "" }: UseGeulOptions
+) => {
+  const phonemes = useMemo(() => phonemesSeperator(value), [value]);
+  const [geul, setGeul] = useState<string>(initial);
+  const [isFired, setFired] = useState<boolean>(false);
+
+  const reset = () => {
+    setFired(false);
+    setGeul(initial);
+  };
+
+  const run = () => {
+    match(isFired)
+      .with(true, () =>
+        console.warn(
+          `
+            geul(${value}) is already excuted.
+            If you want to re-run it. call 'reset' method first.
+          `
+            .replace(/^ +/gm, "")
+            .trim()
+        )
+      )
+      .otherwise(() => {
+        setFired(true);
+        interval(speed)
+          .pipe(
+            map((idx) => pipe(phonemes, slice(0, idx), toArray)),
+            take(phonemes.length + 1)
+          )
+          .subscribe((value) => setGeul(phonemesMerger(value)));
+      });
+  };
+
+  return { geul, reset, run };
+};
