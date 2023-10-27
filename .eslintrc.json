@@ -23,8 +23,45 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
+      "plugins": ["import", "prettier", "unused-imports"],
       "extends": ["plugin:@nx/typescript"],
-      "rules": {}
+      "rules": {
+        "@nx/enforce-module-boundaries": "off",
+        "prettier/prettier": ["error", { "endOfLine": "auto" }],
+        "unused-imports/no-unused-imports": "error",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "caughtErrorsIgnorePattern": "^_"
+          }
+        ],
+        "import/order": [
+          "error",
+          {
+            "groups": [
+              "builtin",
+              "external",
+              "internal",
+              "parent",
+              "sibling",
+              "index",
+              "object",
+              "type"
+            ],
+            "pathGroups": [
+              {
+                "pattern": "react*",
+                "group": "builtin",
+                "position": "before"
+              }
+            ],
+            "pathGroupsExcludedImportTypes": [],
+            "newlines-between": "always"
+          }
+        ]
+      }
     },
     {
       "files": ["*.js", "*.jsx"],
