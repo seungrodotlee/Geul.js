@@ -1,7 +1,9 @@
 import { join, map, pipe } from "@fxts/core";
 import { P, match } from "ts-pattern";
 
-export const partOf = <T>(list: T[], comparisonTarget?: T[]) => {
+export function partOf<T>(list: T[]): (comparisonTarget: T[]) => boolean;
+export function partOf<T>(list: T[], comparisonTarget: T[]): boolean;
+export function partOf<T>(list: T[], comparisonTarget?: T[]) {
   return match(comparisonTarget)
     .with(
       P.nullish,
@@ -23,4 +25,4 @@ export const partOf = <T>(list: T[], comparisonTarget?: T[]) => {
         ),
     )
     .otherwise((target) => join("", list).includes(join("", target)));
-};
+}

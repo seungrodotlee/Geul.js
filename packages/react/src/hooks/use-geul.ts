@@ -39,26 +39,17 @@ export const useGeul = (
       )
       .otherwise(() => {
         match(phonemesSeperator(initial))
-          .with(
-            P.when((initPhonemes) =>
-              partOf(phonemesSeperator(value), initPhonemes),
-            ),
-            (initPhonemes) => {
-              setFired(true);
-              interval(speed)
-                .pipe(
-                  map((idx) =>
-                    pipe(
-                      phonemes,
-                      slice(0, initPhonemes.length + idx),
-                      toArray,
-                    ),
-                  ),
-                  take(phonemes.length - initPhonemes.length + 1),
-                )
-                .subscribe((value) => setGeul(phonemesMerger(value)));
-            },
-          )
+          .with(P.when(partOf(phonemesSeperator(value))), (initPhonemes) => {
+            setFired(true);
+            interval(speed)
+              .pipe(
+                map((idx) =>
+                  pipe(phonemes, slice(0, initPhonemes.length + idx), toArray),
+                ),
+                take(phonemes.length - initPhonemes.length + 1),
+              )
+              .subscribe((value) => setGeul(phonemesMerger(value)));
+          })
           .otherwise(() => {
             throw Error(`Initial value '${initial}' is not part of '${value}'`);
           });
