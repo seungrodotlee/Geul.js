@@ -25,6 +25,8 @@ export const Default: Story = {
   args: {
     initial: "",
     value: "안녕하세요",
+    speed: 50,
+    decomposeOnBackspace: true,
   },
-  render: (props) => <TypeWriter {...props} />,
+  // render: (props) => <TypeWriter {...props} />,
 };
