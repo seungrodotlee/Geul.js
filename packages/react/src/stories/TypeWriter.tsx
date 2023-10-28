@@ -1,9 +1,11 @@
 import { useGeul } from "../hooks/use-geul";
 
-export type ThingsProps = { name: string };
-export const Things = ({ name }: ThingsProps) => {
-  const { geul, run, reset } = useGeul(name, {
+export type TypeWriterProps = { initial: string; value: string };
+
+export const TypeWriter = ({ initial, value }: TypeWriterProps) => {
+  const { geul, run, reset } = useGeul(value, {
     speed: 50,
+    initial,
   });
 
   return (
