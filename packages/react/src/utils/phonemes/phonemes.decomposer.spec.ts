@@ -1,7 +1,7 @@
-import { phonemesSeperator } from "./phonemes.seperator";
-describe("phonemesSeperator", () => {
+import { phonemesDecomposer } from "./phonemes.decomposer";
+describe("phonemesDecomposer", () => {
   it("should seperate korean words to it's phonemes", () => {
-    expect(phonemesSeperator("안녕하세요")).toStrictEqual([
+    expect(phonemesDecomposer("안녕하세요")).toStrictEqual([
       "ㅇ",
       "ㅏ",
       "ㄴ",
@@ -18,7 +18,7 @@ describe("phonemesSeperator", () => {
   });
 
   it("should return inputed word if it's not korean", () => {
-    expect(phonemesSeperator("안녕 david")).toStrictEqual([
+    expect(phonemesDecomposer("안녕 david")).toStrictEqual([
       "ㅇ",
       "ㅏ",
       "ㄴ",

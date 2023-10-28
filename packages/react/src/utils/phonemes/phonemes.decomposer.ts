@@ -7,10 +7,11 @@ import {
   split,
   toArray,
 } from "@fxts/core";
-import { phonemes } from "../../constraints/phonemes";
 import { P, match } from "ts-pattern";
 
-export const phonemesSeperator = (words: string) => {
+import { phonemes } from "../../constraints/phonemes";
+
+export const phonemesDecomposer = (words: string) => {
   return pipe(
     words,
     split(""),
@@ -29,14 +30,14 @@ export const phonemesSeperator = (words: string) => {
                 pipe(
                   phonemesIdxes,
                   entries,
-                  map(([type, idx]) => phonemes[type][idx])
-                )
-            )
-          )
+                  map(([type, idx]) => phonemes[type][idx]),
+                ),
+            ),
+          ),
         )
-        .otherwise(() => [word])
+        .otherwise(() => [word]),
     ),
     filter((phonemes) => phonemes !== ""),
-    toArray
+    toArray,
   );
 };
