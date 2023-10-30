@@ -21,6 +21,10 @@ export const useGeul = (
   const [geul, setGeul] = useState<string>(initial);
   const [isFired, setFired] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (!isFired) setGeul(initial);
+  }, [isFired, initial]);
+
   const reset = () => {
     setFired(false);
     setGeul(initial);
