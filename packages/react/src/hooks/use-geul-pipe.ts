@@ -5,17 +5,21 @@ import { delay } from "@fxts/core";
 import { UseGeulOptions, useGeul } from "./use-geul";
 
 export type UseGeulPipeOptions = UseGeulOptions;
+
 export const useGeulPipe = (
   values: string[],
   { speed, initial = "", decomposeOnBackspace }: UseGeulPipeOptions,
 ) => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const currentStepRef = useRef(0);
-  const currentValue = useMemo(
-    () => (currentStep === 0 ? initial : values[currentStep - 1]),
+  const [currentStep, setCurrentStep] = useState(-1);
+  const currentStepRef = useRef(-1);
+  const currentValue = useMemo<string>(
+    () => (currentStep <= 0 ? initial : values[currentStep - 1]),
     [initial, values, currentStep],
   );
-  const nextValue = useMemo(() => values[currentStep], [values, currentStep]);
+  const nextValue = useMemo<string>(
+    () => values[currentStep] || "",
+    [values, currentStep],
+  );
 
   const {
     geul,
@@ -40,12 +44,11 @@ export const useGeulPipe = (
 
   const [isResetCalled, setResetCalled] = useState(false);
   const reset = () => {
-    setCurrentStep(0);
+    setCurrentStep(-1);
     setResetCalled(true);
   };
 
   useEffect(() => {
-    console.log(currentStep, isResetCalled);
     if (currentStepRef.current === currentStep) return;
 
     if (isResetCalled) {
@@ -53,11 +56,9 @@ export const useGeulPipe = (
       setResetCalled(false);
     }
 
-    if (currentStep === 0) return;
-
     run(() => _reset());
     currentStepRef.current = currentStep;
-  }, [currentStep, run, _reset, isResetCalled]);
+  }, [currentStep, currentValue, run, _reset, isResetCalled]);
 
   return {
     next,
