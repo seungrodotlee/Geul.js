@@ -1,10 +1,10 @@
 import { Meta, StoryObj } from "@storybook/react";
 
-import { TypeWriter, TypeWriterProps } from "./TypeWriter";
+import { PipedTypeWriter, PipedTypeWriterProps } from "./PipedTypeWriter";
 
 const meta: Meta = {
-  title: "Example/TypeWriter",
-  component: TypeWriter,
+  title: "Example/PipedTypeWriter",
+  component: PipedTypeWriter,
   argTypes: {
     children: {
       control: {
@@ -19,13 +19,13 @@ const meta: Meta = {
 
 export default meta;
 
-type Story = StoryObj<TypeWriterProps>;
+type Story = StoryObj<PipedTypeWriterProps>;
 
 export const Default: Story = {
   args: {
     initial: "",
-    value: "안녕하세요",
+    values: ["안녕", "안녕하세요", "안녕", "안녕 여러분"],
     speed: 50,
-    decomposeOnBackspace: true,
+    decomposeOnBackspace: false,
   },
 };
