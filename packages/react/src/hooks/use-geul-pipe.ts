@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { delay } from "@fxts/core";
-
-import { UseGeulOptions, useGeul } from "./use-geul";
+import { UseGeulOptions } from "./use-geul";
+import { useDynamicGeul } from "./use-dynamic-geul";
 
 export type UseGeulPipeOptions = UseGeulOptions;
 
@@ -12,32 +11,21 @@ export const useGeulPipe = (
 ) => {
   const [currentStep, setCurrentStep] = useState(-1);
   const currentStepRef = useRef(-1);
-  const currentValue = useMemo<string>(
-    () => (currentStep <= 0 ? initial : values[currentStep - 1]),
-    [initial, values, currentStep],
-  );
-  const nextValue = useMemo<string>(
-    () => values[currentStep] || "",
-    [values, currentStep],
-  );
 
   const {
     geul,
     run,
     reset: _reset,
-  } = useGeul(nextValue, {
+  } = useDynamicGeul(initial, {
     speed,
-    initial: currentValue,
     decomposeOnBackspace,
   });
 
-  const next = async (delayDuration = 0) => {
+  const next = async () => {
     if (currentStep + 1 === values.length) {
       console.warn("Every geul steps already executed!");
       return;
     }
-
-    await delay(delayDuration);
 
     setCurrentStep((prev) => prev + 1);
   };
@@ -50,15 +38,16 @@ export const useGeulPipe = (
 
   useEffect(() => {
     if (currentStepRef.current === currentStep) return;
+    currentStepRef.current = currentStep;
 
     if (isResetCalled) {
       _reset();
       setResetCalled(false);
+      return;
     }
 
-    run(() => _reset());
-    currentStepRef.current = currentStep;
-  }, [currentStep, currentValue, run, _reset, isResetCalled]);
+    run(values[currentStep]);
+  }, [values, currentStep, run, _reset, isResetCalled]);
 
   return {
     next,
