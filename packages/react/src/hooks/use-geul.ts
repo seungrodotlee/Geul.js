@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { interval, map, take } from "rxjs";
+import { finalize, interval, map, take } from "rxjs";
 import { join, pipe, slice, sort, toArray } from "@fxts/core";
 import { P, match } from "ts-pattern";
 
@@ -31,13 +31,14 @@ export const useGeul = (
   };
 
   const typeForward = useCallback(
-    (from: string[], to: string[]) => {
+    (from: string[], to: string[], onTypeEnd?: () => void) => {
       setFired(true);
 
       interval(speed)
         .pipe(
           map((idx) => pipe(to, slice(0, from.length + idx), toArray)),
           take(to.length - from.length + 1),
+          finalize(() => onTypeEnd && onTypeEnd()),
         )
         .subscribe((value) => setGeul(phonemesMerger(value)));
     },
@@ -45,13 +46,14 @@ export const useGeul = (
   );
 
   const typeDecomposedBackword = useCallback(
-    (from: string[], to: string[]) => {
+    (from: string[], to: string[], onTypeEnd?: () => void) => {
       setFired(true);
 
       interval(speed)
         .pipe(
           map((idx) => pipe(from, slice(0, from.length - idx), toArray)),
           take(from.length - to.length + 1),
+          finalize(() => onTypeEnd && onTypeEnd()),
         )
         .subscribe((value) => setGeul(phonemesMerger(value)));
     },
@@ -59,22 +61,20 @@ export const useGeul = (
   );
 
   const typeBackword = useCallback(
-    (from: string, to: string) => {
+    (from: string, to: string, onTypeEnd?: () => void) => {
       interval(speed)
         .pipe(
           map((idx) => slice(0, from.length - idx, from.split(""))),
           take(from.length - to.length + 1),
+          finalize(() => onTypeEnd && onTypeEnd()),
         )
         .subscribe((value) => setGeul(join("", value)));
     },
     [speed],
   );
 
-  const [_onTypeEnd, setOnTypeEnd] = useState<() => void>();
   const run = useCallback(
     (onTypeEnd?: () => void) => {
-      onTypeEnd && setOnTypeEnd(onTypeEnd);
-
       match({
         isFired,
         initialPhonemes: phonemesDecomposer(initial),
@@ -94,7 +94,8 @@ export const useGeul = (
           {
             initialPhonemes: P.when(partOf(phonemes)),
           },
-          ({ initialPhonemes }) => typeForward(initialPhonemes, phonemes),
+          ({ initialPhonemes }) =>
+            typeForward(initialPhonemes, phonemes, onTypeEnd),
         )
         .with(
           {
@@ -102,14 +103,14 @@ export const useGeul = (
             decomposeOnBackspace: true,
           },
           ({ initialPhonemes }) =>
-            typeDecomposedBackword(initialPhonemes, phonemes),
+            typeDecomposedBackword(initialPhonemes, phonemes, onTypeEnd),
         )
         .with(
           {
             initialPhonemes: P.when((init) => partOf(init, phonemes)),
             decomposeOnBackspace: false,
           },
-          () => typeBackword(initial, value),
+          () => typeBackword(initial, value, onTypeEnd),
         )
         .otherwise(() =>
           pipe(
@@ -132,10 +133,6 @@ export const useGeul = (
       typeBackword,
     ],
   );
-
-  useEffect(() => {
-    if (value === geul) _onTypeEnd && _onTypeEnd();
-  }, [value, geul, _onTypeEnd]);
 
   return { geul, reset, run };
 };
