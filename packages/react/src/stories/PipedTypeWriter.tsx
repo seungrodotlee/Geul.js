@@ -1,5 +1,7 @@
 import { UseGeulPipeOptions, useGeulPipe } from "../hooks/use-geul-pipe";
 
+import { TypingGround } from "./TypingGround";
+
 export type PipedTypeWriterProps = UseGeulPipeOptions & {
   values: string[];
 };
@@ -11,10 +13,6 @@ export const PipedTypeWriter = ({
   const { geul, next, reset } = useGeulPipe(values, options);
 
   return (
-    <div>
-      <button onClick={(_) => reset()}>reset</button>
-      <button onClick={(_) => next()}>next</button>
-      {geul}
-    </div>
+    <TypingGround type="useGeulPipe" geul={geul} onReset={reset} onRun={next} />
   );
 };

@@ -21,7 +21,7 @@ export const useGeulPipe = (
     decomposeOnBackspace,
   });
 
-  const next = async () => {
+  const next = () => {
     if (currentStep + 1 === values.length) {
       console.warn("Every geul steps already executed!");
       return;
