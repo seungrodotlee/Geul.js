@@ -1,4 +1,4 @@
-import { setButtonStyles } from "./styles/set-styles";
+import { setButtonStyles, setGeulStyle } from "./styles/set-styles";
 
 type TypingGroundProps = {
   type: "useGeul" | "useDynamicGeul" | "useGeulPipe";
@@ -16,17 +16,20 @@ export const TypingGround = ({
   return (
     <div>
       <div>
-        <button style={setButtonStyles("grey")} onClick={() => onReset()}>
+        <button
+          style={setButtonStyles(["white", "black"])}
+          onClick={() => onReset()}
+        >
           reset
         </button>
         <button
-          style={setButtonStyles("primary", "0 0.5rem")}
+          style={setButtonStyles(["accent", "black"], "0 0.5rem")}
           onClick={() => onRun()}
         >
           {type === "useGeulPipe" ? "next" : "run"}
         </button>
       </div>
-      <p>{geul}</p>
+      <p style={setGeulStyle()}>{geul}</p>
     </div>
   );
 };

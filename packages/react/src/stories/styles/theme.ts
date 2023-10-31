@@ -1,7 +1,10 @@
 export const colors = {
-  primary: "#170358",
-  secondary: "#C8381D",
-  grey: "#A5A3AD",
+  primary: "#36008D",
+  secondary: "#7851B8",
+  accent: "#31EC56",
+  grey: "#E2E0E5",
+  black: "#000",
+  white: "#FFF",
 };
 
 export type Colors = keyof typeof colors;
