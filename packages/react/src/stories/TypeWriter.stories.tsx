@@ -13,6 +13,7 @@ const meta: Meta = {
     },
   },
   parameters: {
+    componentSubtitle: "",
     controls: { expanded: true },
   },
 };
