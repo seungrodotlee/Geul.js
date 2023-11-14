@@ -6,25 +6,64 @@
 
 # Features
 
-- Geul it in **any framework** you want!
+- Geul it in **your favorite framework**!
   - We willing to supports all major FE frameworks
   - Currently available on `React`
-- Geul it **any time** you want!
+- Geul it **just in time**!
   - Provides a `run` and `reset` functions to start and reset 'Geul'
+- Geul it **as your flavor**!
+  - Provides three methods that allow you to implement typing effect as your favorite flavor!
 
 # Installation
 
+> I'm working on this... Please wait a little while.
+
 # Quick Start
 
+```tsx
+import { useGeul } from "@dot/geul-react";
+
+const Things = () => {
+  const { geul, run, reset } = useGeul("안녕하세요", {
+    speed: 50,
+  })
+
+  /**
+   * when you hit the 'run' button.
+   * then typing of "안녕하세요" will be started in 'p' tag below.
+   */
+  return (
+    <div>
+      <div onClick={() => reset()}>reset</div>
+      <div onClick={() => run()}>run</div>
+      <p>{geul}</p>
+    </div>
+  )
+};
+
+export default Things;
+```
+
 # Packages
+|name|version|
+|-|-|
+|[`@dot/react-geul`](./packages/react/README.md)|`0.0.1`|
 
 # Demos
 
+> I'm working on this... Please wait a little while.
+
 # Documentation
+
+> I'm working on this... Please wait a little while.
 
 # Contributing
 
+> I'm working on this... Please wait a little while.
+
 # Feedback
+
+Any feedbacks and bug reports are welcome in [issue tab](https://github.com/seungrodotlee/Geul.js/issues)!
 
 # License
 
