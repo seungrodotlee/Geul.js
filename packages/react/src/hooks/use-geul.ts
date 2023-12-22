@@ -17,7 +17,6 @@ export const useGeul = (
   value: string,
   { speed = 50, initial = "", decomposeOnBackspace }: UseGeulOptions,
 ) => {
-  console.log(value);
   const phonemes = useMemo(() => phonemesDecomposer(value), [value]);
   const [geul, setGeul] = useState<string>(initial);
   const [isFired, setFired] = useState<boolean>(false);
@@ -124,7 +123,7 @@ export const useGeul = (
         .with(
           {
             initialPhonemes: P.when((init) => partOf(init, phonemes)),
-            decomposeOnBackspace: false,
+            decomposeOnBackspace: P.union(P.nullish, false),
           },
           () => typeBackword(initial, value, handleTypeEnd(onTypeEnd)),
         )
