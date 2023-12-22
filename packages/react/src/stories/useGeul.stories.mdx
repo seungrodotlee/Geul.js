@@ -1,0 +1,39 @@
+import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { TypeWriter } from "./TypeWriter";
+import { colors } from "./styles/theme";
+
+<Meta
+  title="Example/useGeul"
+  component={TypeWriter}
+  argTypes={{
+    children: {
+      control: {
+        type: "text",
+      },
+    },
+  }}
+  parameters={{
+    componentSubtitle: "",
+    controls: { expanded: true },
+  }}
+/>
+
+# useGeul
+
+> hi
+
+export const Template = (args) => <TypeWriter {...args} />;
+
+<Canvas withToolbar={true} style={{ background: colors.primary }}>
+  <Story
+    name="controls"
+    args={{
+      initial: "",
+      value: "안녕하세요",
+      speed: 50,
+      decomposeOnBackspace: true,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

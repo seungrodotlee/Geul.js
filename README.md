@@ -1,6 +1,6 @@
 # Geul.js
 
-![메인이미지](docs/static/head_motion.gif)
+![메인이미지](readme/static/head_motion.gif)
 
 > `Geul.js` is a library designed to easily implement the typing effect of Korean characters, where characters are decomposed into initial, medial, and final consonants as they are typed and then combined.
 
@@ -54,10 +54,6 @@ export default Things;
 > I'm working on this... Please wait a little while.
 
 # Documentation
-
-> I'm working on this... Please wait a little while.
-
-# Contributing
 
 > I'm working on this... Please wait a little while.
 

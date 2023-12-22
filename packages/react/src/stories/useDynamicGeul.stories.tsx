@@ -1,10 +1,10 @@
 import { Meta, StoryObj } from "@storybook/react";
 
-import { PipedTypeWriter, PipedTypeWriterProps } from "./PipedTypeWriter";
+import { DynamicTypeWriter, DynamicTypeWriterProps } from "./DynamicTypeWriter";
 
 const meta: Meta = {
-  title: "Example/PipedTypeWriter",
-  component: PipedTypeWriter,
+  title: "Example/useDynamicGeul",
+  component: DynamicTypeWriter,
   argTypes: {
     children: {
       control: {
@@ -19,12 +19,12 @@ const meta: Meta = {
 
 export default meta;
 
-type Story = StoryObj<PipedTypeWriterProps>;
+type Story = StoryObj<DynamicTypeWriterProps>;
 
 export const Default: Story = {
   args: {
     initial: "",
-    values: ["안녕", "안녕하세요", "안녕", "안녕 여러분"],
+    value: "안녕하세요",
     speed: 50,
     decomposeOnBackspace: false,
   },
