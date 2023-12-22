@@ -14,6 +14,7 @@ export const useGeulPipe = (
 
   const {
     geul,
+    isRunning,
     run,
     reset: _reset,
   } = useDynamicGeul(initial, {
@@ -50,8 +51,9 @@ export const useGeulPipe = (
   }, [values, currentStep, run, _reset, isResetCalled]);
 
   return {
+    geul,
+    isRunning,
     next,
     reset,
-    geul,
   };
 };

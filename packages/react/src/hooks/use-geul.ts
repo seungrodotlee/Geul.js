@@ -21,6 +21,7 @@ export const useGeul = (
   const phonemes = useMemo(() => phonemesDecomposer(value), [value]);
   const [geul, setGeul] = useState<string>(initial);
   const [isFired, setFired] = useState<boolean>(false);
+  const [isRunning, setRunning] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isFired) setGeul(initial);
@@ -74,8 +75,18 @@ export const useGeul = (
     [speed],
   );
 
+  const handleTypeEnd = useCallback(
+    (onTypeEnd?: () => void) => () => {
+      setRunning(false);
+      onTypeEnd && onTypeEnd();
+    },
+    [],
+  );
+
   const run = useCallback(
     (onTypeEnd?: () => void) => {
+      setRunning(true);
+
       match({
         isFired,
         initialPhonemes: phonemesDecomposer(initial),
@@ -96,7 +107,7 @@ export const useGeul = (
             initialPhonemes: P.when(partOf(phonemes)),
           },
           ({ initialPhonemes }) =>
-            typeForward(initialPhonemes, phonemes, onTypeEnd),
+            typeForward(initialPhonemes, phonemes, handleTypeEnd(onTypeEnd)),
         )
         .with(
           {
@@ -104,14 +115,18 @@ export const useGeul = (
             decomposeOnBackspace: true,
           },
           ({ initialPhonemes }) =>
-            typeDecomposedBackword(initialPhonemes, phonemes, onTypeEnd),
+            typeDecomposedBackword(
+              initialPhonemes,
+              phonemes,
+              handleTypeEnd(onTypeEnd),
+            ),
         )
         .with(
           {
             initialPhonemes: P.when((init) => partOf(init, phonemes)),
             decomposeOnBackspace: false,
           },
-          () => typeBackword(initial, value, onTypeEnd),
+          () => typeBackword(initial, value, handleTypeEnd(onTypeEnd)),
         )
         .otherwise(() =>
           pipe(
@@ -132,8 +147,9 @@ export const useGeul = (
       typeForward,
       typeDecomposedBackword,
       typeBackword,
+      handleTypeEnd,
     ],
   );
 
-  return { geul, reset, run };
+  return { geul, isRunning, reset, run };
 };

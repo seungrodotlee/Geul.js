@@ -14,6 +14,7 @@ export const useDynamicGeul = (
 
   const {
     geul,
+    isRunning,
     run: _run,
     reset: _reset,
   } = useGeul(nextValue, {
@@ -46,6 +47,7 @@ export const useDynamicGeul = (
 
   return {
     geul,
+    isRunning,
     reset,
     run,
   };
