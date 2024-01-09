@@ -19,8 +19,10 @@ const Header = () => {
 
   return (
     <div>
-      {/* <p className="absolute">글.제이에스</p> */}
-      <p className="relative">{geul}</p>
+      <div className="relative">
+        <p>&nbsp;</p>
+        <p className="absolute top-0 left-0">{geul}</p>
+      </div>
     </div>
   );
 };
