@@ -3,18 +3,14 @@ import classNames from "classnames";
 import { refineProps } from "../../utils";
 import { navigate } from "gatsby";
 import {
-  ReactElement,
   ComponentProps,
-  ReactNode,
   useMemo,
   useRef,
   useState,
-  cloneElement,
-  useEffect,
 } from "react";
-import { P, match } from "ts-pattern";
-import { FaAngleDown } from "react-icons/fa6";
 import Chevron from "../ingredients/Chevron";
+import useChild from "../../hooks/use-child";
+import useChildProps from "../../hooks/use-child-props";
 
 type CollapsibleProps = {
   initialCollapsed?: boolean;
@@ -28,53 +24,36 @@ const Collapsible = ({
     initialCollapsed ?? true,
   );
 
-  const head = useMemo(() => {
-    return pipe(
-      match(children)
-        .with(P.array({ type: P._ }), () =>
-          pipe(
-            children as Iterable<ReactElement<CollapsibleHeadProps>>,
-            find((child) => child.type === Collapsible.Head),
-            prop("props"),
-          ),
-        )
-        .with(
-          { type: Collapsible.Head },
-          (child) => (child as ReactElement<CollapsibleHeadProps>).props,
-        )
-        .otherwise(() => null),
-      throwIf(isNil, () => Error("Collapsible.Head is required!")),
-    );
-  }, [children]);
+  const head = useChildProps({
+    children,
+    type: Collapsible.Head,
+  });
 
-  const details = useMemo(() => {
-    return match(children)
-      .with(P.array({ type: P._ }), () =>
-        pipe(
-          children as Iterable<ReactElement>,
-          find((child) => child.type === Collapsible.Details),
-          (child) =>
-            child && cloneElement(child, { ...child?.props, isCollapsed }),
-        ),
-      )
-      .with({ type: Collapsible.Details }, (child) => child as ReactElement)
-      .otherwise(() => null);
-  }, [children, isCollapsed]);
+  const details = useChild(
+    {
+      children,
+      type: Collapsible.Details,
+      overwriteProps: {
+        isCollapsed,
+      },
+    },
+    [isCollapsed],
+  );
 
   return (
     <div {...refineProps(props)}>
       <button
-        className="flex items-center justify-between w-full"
+        className="flex items-center w-full"
         onClick={() => {
           setCollapsed((prev) => !prev);
-          // head.to && navigate(head.to);
+          head.to && navigate(head.to);
         }}
       >
-        <p className="mr-4">{head.children}</p>
-        <Chevron direction={isCollapsed ? "bottom" : "top"} />
+        <Chevron className="mr-2" direction={isCollapsed ? "bottom" : "top"} />
+        <p>{head.children}</p>
       </button>
-      <div className="flex relative border-l-2 border-neutral-300">
-        {details}
+      <div className="flex relative">
+        <div className="ml-[5px] pl-[5px] border-l-2 border-neutral-300">{details}</div>
       </div>
     </div>
   );
