@@ -1,7 +1,7 @@
 import { useDynamicGeul } from "@geul/react";
-import { useEffect, useRef, useState } from "react";
+import { ComponentProps, useEffect, useRef, useState } from "react";
 
-const Header = () => {
+const Header = (props: ComponentProps<"div">) => {
   const isWriting = useRef(true);
   const { geul, isRunning, run } = useDynamicGeul("", {
     speed: 50,
@@ -18,7 +18,7 @@ const Header = () => {
   }, [isRunning]);
 
   return (
-    <div>
+    <div {...props}>
       <div className="relative">
         <p>&nbsp;</p>
         <p className="absolute top-0 left-0">{geul}</p>
