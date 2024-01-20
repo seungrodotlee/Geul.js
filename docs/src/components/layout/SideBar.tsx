@@ -3,11 +3,37 @@ import classNames from "classnames";
 import Header from "./Header";
 import { Link, graphql, useStaticQuery } from "gatsby";
 import { refineProps } from "../../utils";
-import { entries, groupBy, pipe, reduce, split, toArray } from "@fxts/core";
+import {
+  entries,
+  groupBy,
+  map,
+  pipe,
+  prepend,
+  reduce,
+  split,
+  tap,
+  toArray,
+} from "@fxts/core";
 import { P, match } from "ts-pattern";
 import Collapsible from "../display/Collapsible";
 
-type Node = {
+type RawIndex = {
+  standalone: string | null;
+  category: string | null;
+  pages: string[] | null;
+};
+
+type ContentsIndexQuery = {
+  allYaml: {
+    edges: {
+      node: {
+        index: RawIndex[];
+      };
+    }[];
+  };
+};
+
+type RawContent = {
   id: string;
   frontmatter: {
     title: string;
@@ -17,18 +43,37 @@ type Node = {
 
 type ContentsQuery = {
   allMdx: {
-    nodes: Node[];
+    nodes: RawContent[];
   };
 };
+
 type Page = Record<"id" | "title" | "slug", string>;
 
-type Categories = Record<
+type MappedCategories = Record<
   string,
   {
-    index: Page;
-    pages: Page[];
+    overview: Page;
+    pages: Record<string, Page>;
   }
 >;
+
+class Standalone {
+  standalone: Page;
+
+  constructor(standalone: Page) {
+    this.standalone = standalone;
+  }
+}
+
+class Category {
+  category: string;
+  pages: Page[];
+
+  constructor(category: string, pages: Page[]) {
+    this.category = category;
+    this.pages = pages;
+  }
+}
 
 const splitIfSlashIncluded = (title: string) => {
   return match(title)
@@ -37,32 +82,32 @@ const splitIfSlashIncluded = (title: string) => {
 };
 
 const accumulatePageToCategories =
-  (result: Categories, id: string, slug: string) =>
+  (result: MappedCategories, id: string, slug: string) =>
   ([category, splittedTitle]: string[]) => {
     return match(splittedTitle)
-      .returnType<Categories>()
-      .with(P.union(P.nullish, "index"), () => ({
+      .returnType<MappedCategories>()
+      .with(P.union(P.nullish, "overview"), () => ({
         ...result,
         [category]: {
-          index: { id, title: category, slug },
-          pages: result[category]?.pages || [],
+          overview: { id, title: splittedTitle ?? category, slug },
+          pages: result[category]?.pages || {},
         },
       }))
       .otherwise(() => ({
         ...result,
         [category]: {
-          index: result[category]?.index,
-          pages: [
-            ...(result[category]?.pages || []),
-            { id, title: splittedTitle, slug },
-          ],
+          overview: result[category]?.overview,
+          pages: {
+            ...(result[category]?.pages || {}),
+            [splittedTitle]: { id, title: splittedTitle, slug },
+          },
         },
       }));
   };
 
 const categoriesAccumulator = (
-  result: Categories,
-  { id, frontmatter: { slug, title } }: Node,
+  result: MappedCategories,
+  { id, frontmatter: { slug, title } }: RawContent,
 ) => {
   return pipe(
     title,
@@ -71,9 +116,53 @@ const categoriesAccumulator = (
   );
 };
 
+const categoriesMapper =
+  (accumulated: MappedCategories) => (standaloneOrCategory: RawIndex) => {
+    return match(standaloneOrCategory)
+      .returnType<Standalone | Category>()
+      .with(
+        { standalone: P.string },
+        ({ standalone }) => new Standalone(accumulated[standalone].overview),
+      )
+      .with(
+        { category: P.string, pages: P.array(P.string) },
+        ({ category, pages }) =>
+          new Category(
+            category,
+            pipe(
+              pages,
+              map((page) => accumulated[category].pages[page]),
+              (mappedPages) =>
+                accumulated[category].overview
+                  ? prepend(accumulated[category].overview, mappedPages)
+                  : mappedPages,
+              toArray,
+            ),
+          ),
+      )
+      .run();
+  };
+
+const getOrderedCategories =
+  (index: RawIndex[]) => (accumulated: MappedCategories) => {
+    return pipe(index, map(categoriesMapper(accumulated)), toArray);
+  };
+
 const SideBar = ({ className, ...props }: ComponentProps<"div">) => {
-  const data = useStaticQuery<ContentsQuery>(graphql`
+  const data = useStaticQuery<ContentsIndexQuery & ContentsQuery>(graphql`
     query {
+      allYaml {
+        edges {
+          node {
+            index {
+              standalone
+              category
+              pages
+            }
+          }
+        }
+      }
+
       allMdx {
         nodes {
           id
@@ -86,15 +175,16 @@ const SideBar = ({ className, ...props }: ComponentProps<"div">) => {
     }
   `);
 
-  const categories = useMemo(
-    () =>
-      pipe(
-        reduce<Node, Categories>(categoriesAccumulator, {}, data.allMdx.nodes),
-        entries,
-        toArray,
+  const categories = useMemo(() => {
+    return pipe(
+      reduce<RawContent, MappedCategories>(
+        categoriesAccumulator,
+        {},
+        data.allMdx.nodes,
       ),
-    [data],
-  );
+      getOrderedCategories(data.allYaml.edges[0].node.index),
+    );
+  }, [data]);
 
   return (
     <div
@@ -104,31 +194,33 @@ const SideBar = ({ className, ...props }: ComponentProps<"div">) => {
       <div className="h-full pl-4 pr-8 py-4 bg-neutral-100 rounded-sm">
         <Header className="mb-16" />
         <div className="text-neutral-500">
-          {categories.map(([categoryName, { index, pages }]) => (
-            <div key={categoryName}>
-              {pages.length === 0 ? (
-                <div className="flex">
-                  <div className="flex justify-center items-center w-3 mr-2">
-                    <div className="w-1 h-1 rounded-full bg-neutral-300"></div>
+          {categories.map((standaloneOrCategory) =>
+            match(standaloneOrCategory)
+              .with(P.instanceOf(Standalone), ({ standalone }) => (
+                <div key={standalone.title}>
+                  <div className="flex">
+                    <div className="flex justify-center items-center w-3 mr-2">
+                      <div className="w-1 h-1 rounded-full bg-neutral-300"></div>
+                    </div>
+                    <Link to={standalone.slug}>{standalone.title}</Link>
                   </div>
-                  <Link to={index.slug}>{index.title}</Link>
                 </div>
-              ) : (
-                <Collapsible>
-                  <Collapsible.Head to={index.slug}>
-                    {index.title}
-                  </Collapsible.Head>
-                  <Collapsible.Details>
-                    {pages.map(({ id, title, slug }) => (
-                      <Link key={id} to={slug}>
-                        {title}
-                      </Link>
-                    ))}
-                  </Collapsible.Details>
-                </Collapsible>
-              )}
-            </div>
-          ))}
+              ))
+              .otherwise(({ category, pages }) => (
+                <div key={category}>
+                  <Collapsible>
+                    <Collapsible.Head>{category}</Collapsible.Head>
+                    <Collapsible.Details>
+                      {pages.map(({ id, title, slug }) => (
+                        <Link key={id} to={slug}>
+                          {title}
+                        </Link>
+                      ))}
+                    </Collapsible.Details>
+                  </Collapsible>
+                </div>
+              )),
+          )}
         </div>
       </div>
     </div>

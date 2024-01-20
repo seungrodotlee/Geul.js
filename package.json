@@ -13,6 +13,7 @@
     "@mdx-js/react": "^2.3.0",
     "gatsby-plugin-mdx": "^5.13.0",
     "gatsby-source-filesystem": "^5.13.0",
+    "gatsby-transformer-yaml": "^5.13.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^5.0.1",

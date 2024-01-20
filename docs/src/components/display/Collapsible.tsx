@@ -2,12 +2,7 @@ import { find, isNil, pipe, prop, throwIf } from "@fxts/core";
 import classNames from "classnames";
 import { refineProps } from "../../utils";
 import { navigate } from "gatsby";
-import {
-  ComponentProps,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { ComponentProps, useMemo, useRef, useState } from "react";
 import Chevron from "../ingredients/Chevron";
 import useChild from "../../hooks/use-child";
 import useChildProps from "../../hooks/use-child-props";
@@ -53,7 +48,9 @@ const Collapsible = ({
         <p>{head.children}</p>
       </button>
       <div className="flex relative">
-        <div className="ml-[5px] pl-[5px] border-l-2 border-neutral-300">{details}</div>
+        <div className="ml-[5px] pl-[5px] border-l-2 border-neutral-300">
+          {details}
+        </div>
       </div>
     </div>
   );
@@ -98,7 +95,7 @@ Collapsible.Details = ({
         }}
         className={classNames("transition-all duration-300 ease-in-out")}
       >
-        <ul>{children}</ul>
+        <ul className="flex flex-col">{children}</ul>
       </div>
     </div>
   );

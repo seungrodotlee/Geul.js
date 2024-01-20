@@ -24,6 +24,20 @@ const config: GatsbyConfig = {
     "gatsby-plugin-sharp", 
     "gatsby-transformer-sharp", 
     {
+      resolve: `gatsby-transformer-yaml`,
+      options: {
+        typeName: `Yaml`, // a fixed string
+      },
+    },
+    {
+      resolve: "gatsby-source-filesystem",
+      options: {
+        // name: "postsIndex",
+        path: "./content/",
+      },
+      // __key: "postsIndex"
+    },
+    {
       resolve: 'gatsby-source-filesystem',
       options: {
         "name": "images",
@@ -40,10 +54,10 @@ const config: GatsbyConfig = {
       __key: "pages"
     },
     {
-      resolve: `gatsby-source-filesystem`,
+      resolve: "gatsby-source-filesystem",
       options: {
-        name: `posts`,
-        path: `./content/posts`,
+        name: "posts",
+        path: "./content/posts",
       },
       __key: "posts"
     },

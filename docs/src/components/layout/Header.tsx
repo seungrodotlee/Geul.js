@@ -14,14 +14,14 @@ const Header = (props: ComponentProps<"div">) => {
     setTimeout(() => {
       run(isWriting.current ? "글.제이에스" : "");
       isWriting.current = !isWriting.current;
-    }, 2000);
+    }, isWriting.current ? 1000 : 4000);
   }, [isRunning]);
 
   return (
     <div {...props}>
       <div className="relative">
         <p>&nbsp;</p>
-        <p className="absolute top-0 left-0">{geul}</p>
+        <p className="absolute top-0 left-0 text-xl font-bold">{geul}</p>
       </div>
     </div>
   );
