@@ -1,4 +1,4 @@
-import { find, pipe } from "@fxts/core";
+import { find, pipe, some } from "@fxts/core";
 import {
   DependencyList,
   FC,
@@ -14,10 +14,7 @@ type UseChildProps<Child extends FC, Props> = {
   type: Child;
   overwriteProps?: Props;
 };
-const useChild = <
-  Child extends FC,
-  Props extends Parameters<Child>[0],
->(
+const useChild = <Child extends FC, Props extends Parameters<Child>[0]>(
   { children, type, overwriteProps }: UseChildProps<Child, Props>,
   deps: DependencyList,
 ) => {

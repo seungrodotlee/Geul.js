@@ -1,7 +1,7 @@
 import { ComponentProps, useMemo } from "react";
 import classNames from "classnames";
 import Header from "./Header";
-import { Link, graphql, useStaticQuery } from "gatsby";
+import { Link, graphql, navigate, useStaticQuery } from "gatsby";
 import { refineProps } from "../../utils";
 import {
   entries,
@@ -202,7 +202,13 @@ const SideBar = ({ className, ...props }: ComponentProps<"div">) => {
                     <div className="flex justify-center items-center w-3 mr-2">
                       <div className="w-1 h-1 rounded-full bg-neutral-300"></div>
                     </div>
-                    <Link to={standalone.slug}>{standalone.title}</Link>
+                    <button
+                      onClick={() =>
+                        navigate(`${standalone.slug}/${location.search}`)
+                      }
+                    >
+                      {standalone.title}
+                    </button>
                   </div>
                 </div>
               ))
@@ -212,9 +218,12 @@ const SideBar = ({ className, ...props }: ComponentProps<"div">) => {
                     <Collapsible.Head>{category}</Collapsible.Head>
                     <Collapsible.Details>
                       {pages.map(({ id, title, slug }) => (
-                        <Link key={id} to={slug}>
+                        <button
+                          key={id}
+                          onClick={() => navigate(`${slug}/${location.search}`)}
+                        >
                           {title}
-                        </Link>
+                        </button>
                       ))}
                     </Collapsible.Details>
                   </Collapsible>
