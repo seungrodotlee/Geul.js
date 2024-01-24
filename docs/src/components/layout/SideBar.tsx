@@ -1,6 +1,6 @@
 import { ComponentProps, useMemo } from "react";
 import classNames from "classnames";
-import Header from "./Header";
+import Logo from "./Logo";
 import { Link, graphql, navigate, useStaticQuery } from "gatsby";
 import { refineProps } from "../../utils";
 import {
@@ -192,7 +192,7 @@ const SideBar = ({ className, ...props }: ComponentProps<"div">) => {
       {...refineProps(props)}
     >
       <div className="h-full pl-4 pr-8 py-4 bg-neutral-100 rounded-sm">
-        <Header className="mb-16" />
+        <Logo className="mb-16" />
         <div className="text-neutral-500">
           {categories.map((standaloneOrCategory) =>
             match(standaloneOrCategory)

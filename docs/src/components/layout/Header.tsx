@@ -1,27 +1,13 @@
-import { useDynamicGeul } from "@geul/react";
-import { ComponentProps, useEffect, useRef, useState } from "react";
+import { Link } from "gatsby";
+import { FaGithub } from "react-icons/fa";
 
-const Header = (props: ComponentProps<"div">) => {
-  const isWriting = useRef(true);
-  const { geul, isRunning, run } = useDynamicGeul("", {
-    speed: 50,
-    decomposeOnBackspace: true,
-  });
-
-  useEffect(() => {
-    if (isRunning) return;
-
-    setTimeout(() => {
-      run(isWriting.current ? "글.제이에스" : "");
-      isWriting.current = !isWriting.current;
-    }, isWriting.current ? 1000 : 4000);
-  }, [isRunning]);
-
+const Header = () => {
   return (
-    <div {...props}>
-      <div className="relative">
-        <p>&nbsp;</p>
-        <p className="absolute top-0 left-0 text-xl font-bold">{geul}</p>
+    <div className="w-full p-2 pl-0">
+      <div className="flex justify-end w-full px-6 py-4 rounded-md border border-neutral-200">
+        <Link to="/">
+          <FaGithub />
+        </Link>
       </div>
     </div>
   );

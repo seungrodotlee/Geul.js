@@ -3,6 +3,7 @@ import classNames from "classnames";
 import SideBar from "./SideBar";
 import { MDXProvider } from "@mdx-js/react";
 import { refineProps } from "../../utils";
+import Header from "./Header";
 
 const Layout = ({ children, className, ...props }: ComponentProps<"div">) => {
   return (
@@ -11,7 +12,10 @@ const Layout = ({ children, className, ...props }: ComponentProps<"div">) => {
       {...refineProps(props)}
     >
       <SideBar />
-      <div className="flex-grow overflow-y-auto">{children}</div>
+      <div className="flex flex-col flex-grow overflow-y-auto">
+        <Header />
+        <div>{children}</div>
+      </div>
     </div>
   );
 };
