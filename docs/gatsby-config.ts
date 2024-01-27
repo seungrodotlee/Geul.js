@@ -1,4 +1,9 @@
 import type { GatsbyConfig } from "gatsby";
+import dotenv from "dotenv";
+
+import algoliaQueries from "./src/utils/algolia-queries";
+
+dotenv.config();
 
 const config: GatsbyConfig = {
   siteMetadata: {
@@ -19,6 +24,14 @@ const config: GatsbyConfig = {
       options: {
         "icon": "src/images/icon.png"
       }
+    },
+    {
+      resolve: `gatsby-plugin-algolia`,
+      options: {
+        appId: process.env.GATSBY_ALGOLIA_APP_ID,
+        apiKey: process.env.ALGOLIA_ADMIN_KEY,
+        queries: algoliaQueries
+      },
     },
     "gatsby-plugin-mdx", 
     "gatsby-plugin-sharp", 
