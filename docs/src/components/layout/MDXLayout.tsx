@@ -4,6 +4,7 @@ import SideBar from "./SideBar";
 import { MDXProvider } from "@mdx-js/react";
 import { refineProps } from "../../utils";
 import Header from "./Header";
+import { GlobalStyles } from "twin.macro";
 
 const MDXLayout = ({
   children,
@@ -15,6 +16,7 @@ const MDXLayout = ({
       className={classNames("flex w-full h-full", className)}
       {...refineProps(props)}
     >
+      <GlobalStyles />
       <SideBar />
       <div className="flex flex-col flex-grow overflow-y-auto">
         <Header />

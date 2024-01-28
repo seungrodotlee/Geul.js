@@ -16,15 +16,19 @@ const config: GatsbyConfig = {
   graphqlTypegen: true,
   plugins: [
     "gatsby-plugin-postcss", 
-    /* "gatsby-plugin-google-gtag", */ 
+    /* "gatsby-plugin-google-gtag",*/ 
     "gatsby-plugin-image", 
     "gatsby-plugin-sitemap", 
+    { resolve: `gatsby-plugin-emotion` }, 
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
         "icon": "src/images/icon.png"
       }
-    },
+    }, 
+    "gatsby-plugin-mdx", 
+    "gatsby-plugin-sharp", 
+    "gatsby-transformer-sharp", 
     {
       resolve: `gatsby-plugin-algolia`,
       options: {
@@ -33,22 +37,11 @@ const config: GatsbyConfig = {
         queries: algoliaQueries
       },
     },
-    "gatsby-plugin-mdx", 
-    "gatsby-plugin-sharp", 
-    "gatsby-transformer-sharp", 
     {
       resolve: `gatsby-transformer-yaml`,
       options: {
         typeName: `Yaml`, // a fixed string
       },
-    },
-    {
-      resolve: "gatsby-source-filesystem",
-      options: {
-        // name: "postsIndex",
-        path: "./content/",
-      },
-      // __key: "postsIndex"
     },
     {
       resolve: 'gatsby-source-filesystem',
@@ -65,6 +58,14 @@ const config: GatsbyConfig = {
         "path": "./src/pages/"
       },
       __key: "pages"
+    },
+    {
+      resolve: "gatsby-source-filesystem",
+      options: {
+        // name: "postsIndex",
+        path: "./content/",
+      },
+      // __key: "postsIndex"
     },
     {
       resolve: "gatsby-source-filesystem",

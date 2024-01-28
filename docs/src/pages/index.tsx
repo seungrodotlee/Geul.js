@@ -1,4 +1,5 @@
 import * as React from "react";
+import "twin.macro";
 import type { HeadFC, PageProps } from "gatsby";
 import Layout from "../components/layout/Layout";
 
