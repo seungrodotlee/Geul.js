@@ -1,6 +1,6 @@
 import { ComponentProps, useMemo } from "react";
 import classNames from "classnames";
-import Logo from "./Logo";
+import Logo from "./logo";
 import { Link, graphql, navigate, useStaticQuery } from "gatsby";
 import { refineProps } from "../../utils";
 import {
@@ -15,7 +15,7 @@ import {
   toArray,
 } from "@fxts/core";
 import { P, match } from "ts-pattern";
-import Collapsible from "../display/Collapsible";
+import Collapsible from "../display/collapsible";
 
 type RawIndex = {
   standalone: string | null;
@@ -192,7 +192,7 @@ const SideBar = ({ className, ...props }: ComponentProps<"div">) => {
       {...refineProps(props)}
     >
       <div className="h-full pl-4 pr-8 py-4 bg-neutral-100 rounded-sm">
-        <Logo className="mb-16" />
+        <Logo className="mb-8" />
         <div className="text-neutral-500">
           {categories.map((standaloneOrCategory) =>
             match(standaloneOrCategory)
@@ -215,7 +215,7 @@ const SideBar = ({ className, ...props }: ComponentProps<"div">) => {
               .otherwise(({ category, pages }) => (
                 <div key={category}>
                   <Collapsible>
-                    <Collapsible.Head>{category}</Collapsible.Head>
+                    <Collapsible.Header>{category}</Collapsible.Header>
                     <Collapsible.Details>
                       {pages.map(({ id, title, slug }) => (
                         <button

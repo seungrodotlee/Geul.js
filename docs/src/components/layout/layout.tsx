@@ -1,10 +1,10 @@
 import { ComponentProps } from "react";
 import classNames from "classnames";
-import SideBar from "./SideBar";
-import { MDXProvider } from "@mdx-js/react";
+import SideBar from "./side-bar";
 import { refineProps } from "../../utils";
-import Header from "./Header";
+import Header from "./header";
 import { GlobalStyles } from "twin.macro";
+import OverlayProvider from "../../domains/@ui/overlay/overlay.provider";
 
 const Layout = ({ children, className, ...props }: ComponentProps<"div">) => {
   return (
@@ -13,11 +13,13 @@ const Layout = ({ children, className, ...props }: ComponentProps<"div">) => {
       {...refineProps(props)}
     >
       <GlobalStyles />
-      <SideBar />
-      <div className="flex flex-col flex-grow overflow-y-auto">
-        <Header />
-        <div>{children}</div>
-      </div>
+      <OverlayProvider>
+        <SideBar />
+        <div className="flex flex-col flex-grow overflow-y-auto">
+          <Header />
+          <div>{children}</div>
+        </div>
+      </OverlayProvider>
     </div>
   );
 };
